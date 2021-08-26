@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Player from './components/player'
+import { OnlyClip, OnlyPlaylist } from './components/player/types/types'
+import videos from './data/videos.json'
 
-function App() {
+export default function App() {
+  const videoYT: OnlyClip = { ...videos.youtube, __mode: 'clip' }
+  const videoMP4: OnlyClip = { ...videos.mp4, __mode: 'clip' }
+  const videoYTNoChapters: OnlyClip = {
+    ...videos.youtube_without_chapters,
+    __mode: 'clip',
+  }
+  const playlist: OnlyPlaylist = { ...videos.playlist, __mode: 'playlist' }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Player {...videoYT} />
+      <Player {...videoMP4} />
+      <Player {...videoYTNoChapters} />
+      <Player {...playlist} />
     </div>
-  );
+  )
 }
-
-export default App;

@@ -1,0 +1,188 @@
+{
+  "youtube": {
+    "playlist": null,
+    "clip": {
+      "cover": "url",
+      "backdrop": "url",
+      "tags": ["string", "string"],
+      "title": "YouTube video",
+      "sources": [
+        {
+          "priority": 1,
+          "url": "https://www.youtube.com/watch?v=bSIc5pBMKN8",
+          "providerId": "YT",
+          "type": "video"
+        },
+        {
+          "priority": 2,
+          "url": "https://www.youtube.com/watch?v=",
+          "providerId": "Vimeo"
+        },
+        {
+          "priority": 2,
+          "url": "https://www.youtube.com/watch?v=bSIc5pBMKN8",
+          "providerId": "File"
+        }
+      ],
+      "chapters": [
+        {
+          "start": 0,
+          "end": 1217,
+          "title": "Wstęp i modlitwa"
+        },
+        {
+          "start": 1217,
+          "end": 2221,
+          "title": "Gdzie i kiedy po raz pierwszy pada zapowiedź przyjścia Mesjasza poprzez kobietę?"
+        },
+        {
+          "start": 2221,
+          "end": 2558,
+          "title": "Czy rola kobiet w Piśmie Świętym jest umniejszona?"
+        },
+        {
+          "start": 2558,
+          "end": 3525,
+          "title": "Na czym polega błogosławieństwo Marii?"
+        },
+        {
+          "start": 3525,
+          "end": 4520,
+          "title": "W jaki sposób Jezus podchodzi do dzieci, prawa głosu kobiet oraz jaką tajemnice ujawnia Samarytance?"
+        },
+        {
+          "start": 4520,
+          "end": 5062,
+          "title": "Jak Jezus podchodzi do wdów i jak pewna wdowa staje się wzorem ekonomii Królestwa?"
+        },
+        {
+          "start": 5062,
+          "end": 6126,
+          "title": "Co Jezus miał na myśli używając zwrotu \"ta córka Abrahama\", uzdrawiając kobietę w synagodze?"
+        },
+        {
+          "start": 6126,
+          "end": 6688,
+          "title": "Dlaczego Jezus staje w obronie kobiety cudzołożnej i co pokazuje, pisząc palcem po ziemi?"
+        },
+        {
+          "start": 6688,
+          "end": 7462,
+          "title": "Jak Jezus zawstydza Szymona faryzeusza w jego domu, wskazując postępowanie grzesznicy?"
+        },
+        {
+          "start": 7462,
+          "end": 7860,
+          "title": "Jaki dobry uczynek spełnia kobieta wylewając olejek nardowy na głowę Jezusa?"
+        },
+        {
+          "start": 7860,
+          "end": 9701,
+          "title": "Jak Jezus odnosił się to tematu menstruacji? Kobieta cierpiąca na upływ krwi, córka Jaira, córka Labana"
+        },
+        {
+          "start": 9701,
+          "end": 10125,
+          "title": "Jak Jezus odnosi się do małżeństwa i rozwodu?"
+        },
+        {
+          "start": 10125,
+          "end": 11511,
+          "title": "W jaki sposób kobiety zarządzają dobrami materialnymi?"
+        }
+      ]
+    }
+  },
+  "youtube_without_chapters": {
+    "playlist": null,
+    "clip": {
+      "cover": "image url here",
+      "title": "YouTube video",
+      "sources": [
+        {
+          "providerId": "YT",
+          "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+          "type": "video"
+        },
+        {
+          "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+          "providerId": "Vimeo",
+          "type": "audio"
+        },
+        {
+          "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+          "providerId": "File"
+        }
+      ]
+    }
+  },
+  "mp4": {
+    "playlist": null,
+    "clip": {
+      "cover": "image url here",
+      "title": "Hosted MP4 video",
+      "sources": [
+        {
+          "priority": 1,
+          "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4",
+          "providerId": "YT"
+        }
+      ],
+      "chapters": [
+        { "title": "Chapter 1", "start": 50, "end": 120 },
+        { "title": "Chapter 2", "start": 120, "end": 200 }
+      ]
+    }
+  },
+  "playlist": {
+    "clip": null,
+    "playlist": {
+      "title": "Jezus Barankiem i Lwem",
+      "cover": "https://tajemnyplan.pl/wp-content/uploads/2017/09/tp_logo.jpg",
+      "clips": [
+        {
+          "order": 1,
+          "title": "Którego powrotu Jezusa oczekujemy i jak go oczekiwać?",
+          "cover": "https://images.unsplash.com/photo-1561448817-bb90ab1327b5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+          "start": 185,
+          "end": 1265,
+          "sources": [
+            {
+              "priority": 1,
+              "url": "https://youtu.be/P7NOkGLQziU",
+              "providerId": "YT"
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "title": "Dlaczego Krew Jezusa jest najlepszym lekarstwem na odkupienie świata?",
+          "cover": "https://images.unsplash.com/photo-1504087825736-ec698faffd4c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80",
+          "start": 580,
+          "end": 762,
+          "sources": [
+            {
+              "priority": 1,
+              "url": "https://youtu.be/HlulEnH-qfk",
+              "providerId": "YT"
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "title": "Miłujmy uczynkiem i prawdą",
+          "cover": "https://images.unsplash.com/photo-1507692049790-de58290a4334?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+          "start": 6039,
+          "end": 6755,
+          "sources": [
+            {
+              "priority": 1,
+              "url": "https://youtu.be/1lmJWHnwEWQ",
+              "providerId": "YT"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
