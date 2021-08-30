@@ -1,6 +1,6 @@
 import React from 'react'
 import Player from './player'
-import { OnlyClip, OnlyPlaylist, PlayerConfig } from './player/types/types'
+import { PlayerConfig } from './player/types/types'
 import hosted_file from './data/hosted_file.json'
 import playlist_json from './data/playlist.json'
 import with_chapters from './data/with_chapters.json'

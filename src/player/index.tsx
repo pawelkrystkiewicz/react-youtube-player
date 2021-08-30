@@ -82,7 +82,7 @@ const Player = (media: PlayerConfig) => {
       volume: !!state.prevVolume ? state.prevVolume : INITIAL_STATE.volume,
     })
 
-  const setPlaybackRate = (playbackRate): void => setState({ ...state, playbackRate })
+  // const setPlaybackRate = (playbackRate): void => setState({ ...state, playbackRate })
 
   /* POSITION */
   const seekInVideo = (secondsOrPercent: number): void | null => {
@@ -224,8 +224,7 @@ const Player = (media: PlayerConfig) => {
     }
   }
   const playlistNext = () => jumpToPlaylistClip(source!.orderId + 1)
-  const playlistPrevious = () => jumpToPlaylistClip(source!.orderId - 1)
-
+  // const playlistPrevious = () => jumpToPlaylistClip(source!.orderId - 1)
   useEffect(() => {
     if (media.mode === 'clip') {
       initClip(media.clip)
@@ -233,6 +232,7 @@ const Player = (media: PlayerConfig) => {
     if (media.mode === 'playlist') {
       initPlaylist(media.playlist)
     }
+  // eslint-disable-next-line
   }, [])
 
   const chapters = measureChapters(state.duration, media.clip?.chapters)

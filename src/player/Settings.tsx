@@ -3,9 +3,7 @@ import { ReactComponent as FullScreenIcon } from './icons/fullscreen.svg'
 import { ReactComponent as SettingsIcon } from './icons/settings.svg'
 import * as PlayerUI from './ui/PlayerUI'
 
-interface SettingsProps {}
-
-const Settings = ({}: SettingsProps) => (
+const Settings = () => (
   <PlayerUI.Settings>
     <PlayerUI.Button>
       <SettingsIcon />
