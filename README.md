@@ -3,6 +3,7 @@
 ## Status
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/3be2f4bc-a33b-4c25-a0fd-8f4efba66573/deploy-status)](https://app.netlify.com/sites/tp-player/deploys)
+
 https://tp-player.netlify.app/
 ## Core Features
 
