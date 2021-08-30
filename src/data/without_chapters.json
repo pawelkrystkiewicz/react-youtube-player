@@ -1,0 +1,27 @@
+{
+  "__mode": "clip",
+  "playlist": null,
+  "clip": {
+    "title": "YouTube video",
+    "tags": ["no-chapters"],
+    "cover": "",
+    "backdrop": "",
+    "sources": [
+      {
+        "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+        "providerId": "yt",
+        "type": "video"
+      },
+      {
+        "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+        "providerId": "vimeo",
+        "type": "video"
+      },
+      {
+        "url": "https://youtu.be/K4THpdaJoQI?list=PLd5GCd1nrmcy5CCUz2x9hVE2bo2L0RKsQ",
+        "providerId": "file",
+        "type": "video"
+      }
+    ]
+  }
+}

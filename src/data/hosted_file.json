@@ -1,0 +1,19 @@
+{
+  "clip": {
+    "title": "Hosted MP4 video",
+    "tags": ["video", "hosted", "mp4"],
+    "cover": "image url here",
+    "backdrop": "",
+    "sources": [
+      {
+        "type": "video",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4",
+        "providerId": "file"
+      }
+    ],
+    "chapters": [
+      { "title": "Chapter 1", "start": 50, "end": 120 },
+      { "title": "Chapter 2", "start": 120, "end": 200 }
+    ]
+  }
+}

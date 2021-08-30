@@ -29,28 +29,37 @@ export type Marks = { [key: number]: string }
 
 export type PlayerConfig = OnlyClip | OnlyPlaylist
 
-export type OnlyClip = {
-  clip: Clip
+export interface PlayerProps {
+  clip: MediaClip
   playlist?: null
-  __mode: 'clip'
+  mode: 'clip'
 }
 
-export type OnlyPlaylist = {
+export interface OnlyClip {
+  clip: MediaClip
+  playlist?: null
+  mode: 'clip'
+}
+
+export interface OnlyPlaylist {
   clip?: null
-  playlist: Playlist
-  __mode: 'playlist'
+  playlist: MediaPlaylist
+  mode: 'playlist'
 }
 
-export type Clip = {
-  title: string
+export type MediaFragment = {
   cover?: string
+  backdrop?: string
+  title: string
+  tags: string[]
+}
+
+export type MediaClip = MediaFragment & {
   chapters?: Chapter[]
-  sources: VideoSource[]
+  sources: MediaSource[]
 }
 
-export type Playlist = {
-  title: string
-  cover?: string
+export type MediaPlaylist = MediaFragment & {
   clips: PlaylistClip[]
 }
 
@@ -61,7 +70,7 @@ export type PlaylistClip = {
   order: number
   cover?: string
   chapters?: Chapter[]
-  sources: VideoSource[]
+  sources: MediaSource[]
 }
 
 export type Chapter = {
@@ -79,14 +88,14 @@ export type SliderCommonProps = {
   z?: number
 }
 
-export type VideoSource = {
-  priority: number
+export type MediaSource = {
+  providerId: string
   url: string
-  name?: string
+  type: string
 }
 
 export type CurrentSource = {
   url: string
   orderId: number
-  priorityId: number
+  providerId: string
 }

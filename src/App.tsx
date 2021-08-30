@@ -1,21 +1,22 @@
 import React from 'react'
-import Player from './components/player'
-import { OnlyClip, OnlyPlaylist } from './components/player/types/types'
-import videos from './data/videos.json'
+import Player from './player'
+import { OnlyClip, OnlyPlaylist, PlayerConfig } from './player/types/types'
+import hosted_file from './data/hosted_file.json'
+import playlist_json from './data/playlist.json'
+import with_chapters from './data/with_chapters.json'
+import without_chapters from './data/without_chapters.json'
 
 export default function App() {
-  const videoYT: OnlyClip = { ...videos.youtube, __mode: 'clip' }
-  const videoMP4: OnlyClip = { ...videos.mp4, __mode: 'clip' }
-  const videoYTNoChapters: OnlyClip = {
-    ...videos.youtube_without_chapters,
-    __mode: 'clip',
-  }
-  const playlist: OnlyPlaylist = { ...videos.playlist, __mode: 'playlist' }
+  const hosted: PlayerConfig = { ...hosted_file, mode: 'clip' }
+  const withChapters: PlayerConfig = { ...with_chapters, mode: 'clip' }
+  const withoutChapters: PlayerConfig = { ...without_chapters, mode: 'clip' }
+  const playlist: PlayerConfig = { ...playlist_json, mode: 'playlist' }
+
   return (
     <div>
-      <Player {...videoYT} />
-      <Player {...videoMP4} />
-      <Player {...videoYTNoChapters} />
+      <Player {...withChapters} />
+      <Player {...hosted} />
+      <Player {...withoutChapters} />
       <Player {...playlist} />
     </div>
   )

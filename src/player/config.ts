@@ -4,9 +4,11 @@ type Config = {
   INITIAL_STATE: PlayerState
   VOLUME_STEP: number
   REWIND_STEP: number
+  PROVIDERS_PREFERENCE: string[]
 }
 
 const config: Config = {
+  PROVIDERS_PREFERENCE: ['yt', 'vimeo', 'soundcloud', 'file'],
   VOLUME_STEP: 0.05,
   REWIND_STEP: 5,
   INITIAL_STATE: {

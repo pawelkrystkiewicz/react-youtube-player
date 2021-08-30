@@ -9,13 +9,22 @@ import { PlaylistList } from './PlaylistList'
 import SeekerBar from './SeekerBar'
 import Settings from './Settings'
 import { KeyCode } from './shortcuts'
-import { Clip, CurrentSource, PlayerConfig, PlayerProgress, PlayerState, Playlist, PlaylistClip, VideoSource } from './types/types'
+import {
+  MediaClip,
+  CurrentSource,
+  PlayerConfig,
+  PlayerProgress,
+  PlayerState,
+  MediaPlaylist,
+  PlaylistClip,
+  MediaSource,
+} from './types/types'
 import { PlayerContainer } from './ui/Container'
 import * as PlayerUI from './ui/PlayerUI'
 
 const { INITIAL_STATE, VOLUME_STEP, REWIND_STEP } = config
 
-const Player: React.FunctionComponent<PlayerConfig> = media => {
+const Player = (media: PlayerConfig) => {
   const playerRef = useRef<ReactPlayer>(null)
   const [state, setState] = useState<PlayerState>(INITIAL_STATE)
   const [source, setSource] = useState<CurrentSource | null>(null)
@@ -33,7 +42,7 @@ const Player: React.FunctionComponent<PlayerConfig> = media => {
       */
     }
 
-    if (media.__mode === 'playlist') {
+    if (media.mode === 'playlist') {
       onProgressPlaylist(progress.playedSeconds)
     }
 
@@ -156,19 +165,23 @@ const Player: React.FunctionComponent<PlayerConfig> = media => {
   const showErrorOnInvalidSources = (): void =>
     setState({
       ...state,
-      error: 'Wystąpił błąd i nie możemy odtworzyć tego wideo. Skontaktuj się z nami.',
+      error: 'An error occured. Please contact support',
     })
 
-  const getValidSource = (sources: VideoSource[]): VideoSource | undefined =>
-    sources.sort((a, b) => a.priority - b.priority).find(({ url }) => ReactPlayer.canPlay(url))
+  const getValidSource = (sources: MediaSource[]): MediaSource | undefined =>
+    sources
+      .sort(
+        (a, b) => config.PROVIDERS_PREFERENCE.indexOf(a.providerId) - config.PROVIDERS_PREFERENCE.indexOf(b.providerId),
+      )
+      .find(({ url }) => ReactPlayer.canPlay(url))
 
-  const setValidSourceOrError = (sources: VideoSource[], orderId: number) => {
+  const setValidSourceOrError = (sources: MediaSource[], orderId: number) => {
     const firstValidSource = getValidSource(sources)
 
     if (firstValidSource) {
       setSource({
         orderId,
-        priorityId: firstValidSource.priority,
+        providerId: firstValidSource.providerId,
         url: firstValidSource.url,
       })
     } else {
@@ -176,12 +189,12 @@ const Player: React.FunctionComponent<PlayerConfig> = media => {
     }
   }
   // SOURCE HANDLING
-  const initClip = (clip: Clip) => {
+  const initClip = (clip: MediaClip) => {
     setState({ ...state, title: clip.title })
     setValidSourceOrError(clip.sources, 1)
   }
 
-  const initPlaylist = (playlist: Playlist) => {
+  const initPlaylist = (playlist: MediaPlaylist) => {
     setState({ ...state, title: playlist.title })
     const firstClip = playlist.clips.filter(({ order }) => order === 1)[0]
     setValidSourceOrError(firstClip.sources, firstClip.order)
@@ -214,10 +227,10 @@ const Player: React.FunctionComponent<PlayerConfig> = media => {
   const playlistPrevious = () => jumpToPlaylistClip(source!.orderId - 1)
 
   useEffect(() => {
-    if (media.__mode === 'clip') {
+    if (media.mode === 'clip') {
       initClip(media.clip)
     }
-    if (media.__mode === 'playlist') {
+    if (media.mode === 'playlist') {
       initPlaylist(media.playlist)
     }
   }, [])
@@ -228,17 +241,12 @@ const Player: React.FunctionComponent<PlayerConfig> = media => {
   return (
     <PlayerContainer onKeyDownCapture={handleKeyboardShortcut} tabIndex={0}>
       {state.title && <h2>{state.title}</h2>}
-      {media.__mode === 'playlist' && (
+      {media.mode === 'playlist' && (
         <PlaylistList onClick={jumpToPlaylistClip} clips={media.playlist.clips} source={source} />
       )}
 
       <PlayerUI.Body>
-        <div
-          style={{
-            position: 'absolute',
-            top: 50,
-            right: 50,
-          }}>
+        <div className="radar">
           <LagRadar size={350} frames={60} />
         </div>
         <PlayerUI.ClickCatcher onClick={togglePlay}>

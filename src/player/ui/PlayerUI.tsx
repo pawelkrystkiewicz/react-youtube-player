@@ -49,11 +49,7 @@ export const ControlPanel: React.FunctionComponent<StyledDIV> = styled.div`
   justify-content: space-between;
   align-items: center;
   align-content: center;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.5) 100%
-  );
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
   height: 40px;
   margin: 0 12px;
 `
@@ -103,8 +99,7 @@ export const Button: React.FunctionComponent<PlayerButtonProps> = styled.button`
   flex: 0 0 auto;
   cursor: pointer;
   color: #fff;
-  ${({ icon }: PlayerButtonProps) =>
-    !icon ? `` : `::before {content: url("icons/${icon}.svg");}`}
+  ${({ icon }: PlayerButtonProps) => (!icon ? `` : `::before {content: url("icons/${icon}.svg");}`)}
 `
 
 export const TimeTracker: React.FunctionComponent<PlayerButtonProps> = styled.div`
