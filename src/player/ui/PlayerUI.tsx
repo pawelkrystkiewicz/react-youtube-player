@@ -99,7 +99,9 @@ export const Button: React.FunctionComponent<PlayerButtonProps> = styled.button`
   flex: 0 0 auto;
   cursor: pointer;
   color: #fff;
-  ${({ icon }: PlayerButtonProps) => (!icon ? `` : `::before {content: url("icons/${icon}.svg");}`)}
+  background-color: none;
+  background: none;
+  border: none;
 `
 
 export const TimeTracker: React.FunctionComponent<PlayerButtonProps> = styled.div`

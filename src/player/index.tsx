@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import LagRadar from 'react-lag-radar'
 import ReactPlayer, { ReactPlayerProps } from 'react-player/lazy'
 import ChaptersList from './ChaptersList'
 import config from './config'
@@ -246,9 +245,6 @@ const Player = (media: PlayerConfig) => {
       )}
 
       <PlayerUI.Body>
-        <div className="radar">
-          <LagRadar size={350} frames={60} />
-        </div>
         <PlayerUI.ClickCatcher onClick={togglePlay}>
           <ReactPlayer
             {...playerConfig}
@@ -279,7 +275,11 @@ const Player = (media: PlayerConfig) => {
               onToggleMute={toggleMute}
               onVolumeChange={changeVolume}
             />
-            <Settings />
+            <Settings
+              isFullscreen={false}
+              toggleSettingsMenu={() => console.log('toggleSettingsMenu')}
+              toggleFullscreen={() => console.log('toggleFullscreen')}
+            />
           </PlayerUI.ControlPanel>
         </PlayerUI.Container>
       </PlayerUI.Body>

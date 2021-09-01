@@ -20,8 +20,12 @@ body {
 }
 
 .radar {
-  position: absolute;
-  z-index: 999;
-  top: 0;
-  left: 120%;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
+
+.change-log-list {
+  padding: 20px;
+  font-size: 16px;
 }
