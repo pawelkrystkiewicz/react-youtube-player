@@ -56,8 +56,8 @@ export default function App() {
         <Tabs indicatorColor="primary" textColor="primary" centered value={value} onChange={handleChange}>
           <Tab label="With chapters" />
           <Tab label="Without chapters" />
-          <Tab label="Playlist" />
           <Tab label="Hosted file" />
+          <Tab label="Playlist" />
           <Tab label="Change Log" />
         </Tabs>
       </AppBar>
