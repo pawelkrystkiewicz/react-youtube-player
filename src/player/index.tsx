@@ -9,14 +9,9 @@ import SeekerBar from './SeekerBar'
 import Settings from './Settings'
 import { KeyCode } from './shortcuts'
 import {
-  MediaClip,
-  CurrentSource,
-  PlayerConfig,
+  CurrentSource, MediaClip, MediaPlaylist, MediaSource, PlayerConfig,
   PlayerProgress,
-  PlayerState,
-  MediaPlaylist,
-  PlaylistClip,
-  MediaSource,
+  PlayerState, PlaylistClip, VideoPercents
 } from './types/types'
 import { PlayerContainer } from './ui/Container'
 import * as PlayerUI from './ui/PlayerUI'
@@ -92,6 +87,7 @@ const Player = (media: PlayerConfig) => {
   const jumpBackward = (): void | null => seekInVideo(state.playedSeconds - REWIND_STEP)
   const jumpToStart = (): void | null => seekInVideo(0)
   const jumpToEnd = (): void | null => seekInVideo(state.duration)
+  const jumpToPercents = (percent: VideoPercents): void | null => seekInVideo(percent / 100)
 
   /* VOLUME */
   const changeVolume = (volume: number): void => {
@@ -130,12 +126,39 @@ const Player = (media: PlayerConfig) => {
         togglePlay()
         break
       case KeyCode.Home:
+      case KeyCode.Digit0:
         jumpToStart()
         break
       case KeyCode.End:
         jumpToEnd()
         break
-
+      case KeyCode.Digit1:
+        jumpToStart()
+        break
+      case KeyCode.Digit2:
+        jumpToPercents(20)
+        break
+      case KeyCode.Digit3:
+        jumpToPercents(30)
+        break
+      case KeyCode.Digit4:
+        jumpToPercents(40)
+        break
+      case KeyCode.Digit5:
+        jumpToPercents(50)
+        break
+      case KeyCode.Digit6:
+        jumpToPercents(60)
+        break
+      case KeyCode.Digit7:
+        jumpToPercents(70)
+        break
+      case KeyCode.Digit8:
+        jumpToPercents(80)
+        break
+      case KeyCode.Digit9:
+        jumpToPercents(90)
+        break
       default:
         break
     }
@@ -231,7 +254,7 @@ const Player = (media: PlayerConfig) => {
     if (media.mode === 'playlist') {
       initPlaylist(media.playlist)
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [])
 
   const chapters = measureChapters(state.duration, media.clip?.chapters)
