@@ -27,6 +27,7 @@ const config: Config = {
     controls: false,
     muted: false,
     loop: false,
+    fullscreen: false,
   },
 }
 

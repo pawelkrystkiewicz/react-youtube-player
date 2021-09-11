@@ -8,29 +8,33 @@ import TimeTracker from './TimeTracker'
 import { Chapter, PlayerState } from './types/types'
 import * as PlayerUI from './ui/PlayerUI'
 import VolumeBar from './VolumeBar'
+import { useStore } from './store/store.player'
 
 interface ControlsProps {
   state: PlayerState
   currentChapter: Chapter
-  onTogglePlay: () => void
-  onToggleMute: () => void
-  onVolumeChange: (volume: number) => void
 }
 
 const DotSeparator = () => <>&nbsp;&#183;&nbsp;</>
 
-const Controls = ({ state, currentChapter, onTogglePlay, onToggleMute, onVolumeChange }: ControlsProps) => {
+const Controls = ({ state, currentChapter }: ControlsProps) => {
+  const { togglePlay, toggleMute, volumeChange } = useStore(({ togglePlay, toggleMute, volumeChange }) => ({
+    togglePlay,
+    toggleMute,
+    volumeChange,
+  }))
+
   return (
     <>
       <PlayerUI.Controls>
-        <PlayerUI.Button onClick={onTogglePlay}>{state.playing ? <PauseIcon /> : <PlayIcon />}</PlayerUI.Button>
+        <PlayerUI.Button onClick={togglePlay}>{state.playing ? <PauseIcon /> : <PlayIcon />}</PlayerUI.Button>
         <PlayerUI.VolumeControls>
-          <PlayerUI.Button onClick={onToggleMute}>
+          <PlayerUI.Button onClick={toggleMute}>
             {!state.volume ? <VolumeMutedIcon /> : state.volume >= 0.5 ? <VolumeFullIcon /> : <VolumeHalfIcon />}
           </PlayerUI.Button>
         </PlayerUI.VolumeControls>
         <PlayerUI.VolumeBarWrapper>
-          <VolumeBar volume={state.volume} onChange={onVolumeChange} />
+          <VolumeBar volume={state.volume} onChange={volumeChange} />
         </PlayerUI.VolumeBarWrapper>
 
         <TimeTracker playedSeconds={state.playedSeconds} duration={state.duration} />

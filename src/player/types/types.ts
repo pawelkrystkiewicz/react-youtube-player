@@ -1,3 +1,4 @@
+import ReactPlayer from 'react-player'
 import { Direction } from 'react-player-controls'
 
 export type PlayerProgress = {
@@ -23,6 +24,8 @@ export type PlayerState = PlayerProgress & {
   title?: string
   url?: string
   error?: string
+  fullscreen: boolean
+  ref?: React.RefObject<ReactPlayer> | null
 }
 
 export type Marks = { [key: number]: string }

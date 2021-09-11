@@ -22,4 +22,14 @@ export enum KeyCode {
   Digit7 = 'Digit7', // jump to 70%
   Digit8 = 'Digit8', // jump to 80%
   Digit9 = 'Digit9', // jump to 90%
+  Numpad0 = 'Numpad0',
+  Numpad1 = 'Numpad1',
+  Numpad2 = 'Numpad2',
+  Numpad3 = 'Numpad3',
+  Numpad4 = 'Numpad4',
+  Numpad5 = 'Numpad5',
+  Numpad6 = 'Numpad6',
+  Numpad7 = 'Numpad7',
+  Numpad8 = 'Numpad8',
+  Numpad9 = 'Numpad9',
 }

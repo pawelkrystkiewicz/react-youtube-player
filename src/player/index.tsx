@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useReducer } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactPlayer, { ReactPlayerProps } from 'react-player/lazy'
 import ChaptersList from './ChaptersList'
 import config from './config'
@@ -8,185 +8,116 @@ import { PlaylistList } from './PlaylistList'
 import SeekerBar from './SeekerBar'
 import Settings from './Settings'
 import { KeyCode } from './shortcuts'
-import {
-  CurrentSource,
-  MediaClip,
-  MediaPlaylist,
-  MediaSource,
-  PlayerConfig,
-  PlayerProgress,
-  PlayerState,
-  PlaylistClip,
-} from './types/types'
+// import { useStore, api } from './store/player'
+import { useStore } from './store/store.player'
+import { CurrentSource, MediaClip, MediaPlaylist, MediaSource, PlayerConfig, PlaylistClip } from './types/types'
 import { PlayerContainer } from './ui/Container'
-import produce from 'immer'
 import * as PlayerUI from './ui/PlayerUI'
-
-const { INITIAL_STATE, VOLUME_STEP, REWIND_STEP } = config
-enum ActionType {
-  'PROGRESS',
-  'PLAY',
-  'PAUSE',
-  'SEEK',
-  'NEXT',
-  'PREVIOUS',
-  'DURATION',
-}
-type Action = { type: ActionType; payload: Partial<PlayerState> }
-
-function playerReducer(state: PlayerState, action: Action): PlayerState {
-  switch (action.type) {
-    case ActionType.PLAY:
-      return { ...state, playing: true }
-
-    default:
-      return state
-  }
-}
+const { REWIND_STEP } = config
 
 const Player = (media: PlayerConfig) => {
   const playerRef = useRef<ReactPlayer>(null)
+  const fpsRef = useRef<any>(null)
   const [source, setSource] = useState<CurrentSource | null>(null)
-  const [state, setState] = useState<PlayerState>(INITIAL_STATE)
+  const state = useStore()
 
-  /* EVENTS of react-player */
-  const onDuration = (duration: number): void => setState({ ...state, duration })
-
-  const onProgress = (progress: PlayerProgress): void => {
-    let payload: PlayerState = { ...state, ...progress }
-
-    if (!state.seeking) {
-      payload.current = progress.played
-      /* When seeking we want progress indicator to follow user input
-         When playing we update this with actual played % value
-      */
+  useEffect(() => {
+    let lastCalledTime = Date.now()
+    let fps = 0
+    function renderLoop() {
+      let delta = (Date.now() - lastCalledTime) / 1000
+      lastCalledTime = Date.now()
+      fps = 1 / delta
+      if (fpsRef.current) {
+        fpsRef.current.innerText = 'fps ' + fps.toFixed()
+      }
+      requestAnimationFrame(renderLoop)
     }
+    renderLoop()
+  }, [])
 
-    if (media.mode === 'playlist') {
-      onProgressPlaylist(progress.playedSeconds)
-    }
-
-    setState(payload)
-  }
-
-  /* LOADING / BUFFERING */
-  const onBuffer = (): void => setState({ ...state, buffering: true })
-  const onBufferEnd = (): void => setState({ ...state, buffering: false })
+  useEffect(() => {
+    state.setPlayerRef(playerRef)
+  }, [])
 
   /* PROGRESS BAR functions  */
-  const handleSeekerChange = (sliderPosition: number): void => setState({ ...state, current: sliderPosition })
-
-  const handleSeekerChangeStart = (sliderPosition: number): void =>
-    setState({
-      ...state,
-      seeking: true,
-      playing: false,
-      current: sliderPosition,
-    })
-
-  const handleSeekerChangeEnd = (): void => {
-    seekToFraction(state.current)
-    setState({
-      ...state,
-      seeking: false,
-      playing: true,
-    })
-  }
-
-  /* BASIC CONTROLS */
-  const togglePlay = (): void => setState({ ...state, playing: !state.playing })
-  const toggleMute = (): void => (!!state.volume ? mute() : unmute())
-  const mute = (): void => setState({ ...state, volume: 0 })
-  const unmute = (): void =>
-    setState({
-      ...state,
-      volume: !!state.prevVolume ? state.prevVolume : INITIAL_STATE.volume,
-    })
+  const handleSeekerChange = (current: number): void => state.onSeekerChange(current)
+  const handleSeekerChangeStart = (current: number): void => state.onSeekerChangeStart(current)
+  const handleSeekerChangeEnd = (): void => state.onSeekerChangeEnd()
 
   // const setPlaybackRate = (playbackRate): void => setState({ ...state, playbackRate })
   type SeekInVideoType = 'seconds' | 'fraction'
+
   /* POSITION */
   const seekToSeconds = (secondsOrPercent: number, type: SeekInVideoType = 'seconds') => {
     playerRef.current && playerRef.current.seekTo(secondsOrPercent, type)
-    // secondsOrPercent < 1 && handleSeekerChange(secondsOrPercent)
   }
-  const jumpForward = (): void | null => seekToSeconds(state.playedSeconds + REWIND_STEP)
-  const jumpBackward = (): void | null => seekToSeconds(state.playedSeconds - REWIND_STEP)
-  const jumpToStart = (): void | null => seekToSeconds(0)
-  const jumpToEnd = (): void | null => seekToSeconds(1, 'fraction')
-  const seekToFraction = (percent: number): void | null => seekToSeconds(percent, 'fraction')
-
-  /* VOLUME */
-  const changeVolume = (volume: number): void => {
-    if (volume >= 0 && volume <= 1) setState({ ...state, volume, prevVolume: volume })
-  }
-  const stepUpVolume = (): void => changeVolume(state.volume + VOLUME_STEP)
-  const stepDownVolume = (): void => changeVolume(state.volume - VOLUME_STEP)
 
   /* KEYBOARD HANDLER*/
-  const handleKeyboardShortcut = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    console.log(event.code)
-    switch (event.code) {
+  const handleKeyboardShortcut = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault()
+
+    switch (e.code) {
       case KeyCode.Space:
-        togglePlay()
+        state.togglePlay()
         break
       case KeyCode.ArrowUp:
-        stepUpVolume()
+        state.volumeUp()
         break
       case KeyCode.ArrowDown:
-        stepDownVolume()
+        state.volumeDown()
         break
       case KeyCode.ArrowLeft:
-        jumpBackward()
+        state.seekTo(state.playedSeconds - REWIND_STEP, 'seconds')
         break
       case KeyCode.ArrowRight:
-        jumpForward()
+        state.seekTo(state.playedSeconds + REWIND_STEP, 'seconds')
         break
       case KeyCode.F:
         console.log('toggleFullscreen')
         break
       case KeyCode.M:
-        toggleMute()
+        state.toggleMute()
         break
       case KeyCode.K:
-        togglePlay()
+        state.togglePlay()
         break
       case KeyCode.Home:
-      case KeyCode.Digit0:
-        jumpToStart()
+      case KeyCode.Digit0 || KeyCode.Numpad0:
+        state.seekTo(0, 'fraction')
         break
       case KeyCode.End:
-        jumpToEnd()
+        state.seekTo(1, 'fraction')
         break
-      case KeyCode.Digit1:
-        jumpToStart()
+      case KeyCode.Digit1 || KeyCode.Numpad1:
+        state.seekTo(0.1, 'fraction')
         break
-      case KeyCode.Digit2:
-        seekToFraction(0.2)
+      case KeyCode.Digit2 || KeyCode.Numpad2:
+        state.seekTo(0.2, 'fraction')
         break
-      case KeyCode.Digit3:
-        seekToFraction(0.3)
+      case KeyCode.Digit3 || KeyCode.Numpad3:
+        state.seekTo(0.3, 'fraction')
         break
-      case KeyCode.Digit4:
-        seekToFraction(0.4)
+      case KeyCode.Digit4 || KeyCode.Numpad4:
+        state.seekTo(0.4, 'fraction')
         break
-      case KeyCode.Digit5:
-        seekToFraction(0.5)
+      case KeyCode.Digit5 || KeyCode.Numpad5:
+        state.seekTo(0.5, 'fraction')
         break
-      case KeyCode.Digit6:
-        seekToFraction(0.6)
+      case KeyCode.Digit6 || KeyCode.Numpad6:
+        state.seekTo(0.6, 'fraction')
         break
-      case KeyCode.Digit7:
-        seekToFraction(0.7)
+      case KeyCode.Digit7 || KeyCode.Numpad7:
+        state.seekTo(0.7, 'fraction')
         break
-      case KeyCode.Digit8:
-        seekToFraction(0.8)
+      case KeyCode.Digit8 || KeyCode.Numpad8:
+        state.seekTo(0.8, 'fraction')
         break
-      case KeyCode.Digit9:
-        seekToFraction(0.9)
+      case KeyCode.Digit9 || KeyCode.Numpad9:
+        state.seekTo(0.9, 'fraction')
         break
       default:
+        console.log('keyboard handler: exited without action')
         break
     }
   }
@@ -197,10 +128,6 @@ const Player = (media: PlayerConfig) => {
     ref: playerRef,
     fallback: <span>Loading...</span>,
     stopOnUnmount: true,
-    onProgress,
-    onDuration,
-    onBuffer,
-    onBufferEnd,
     youtube: {
       embedOptions: {},
       playerVars: {
@@ -211,14 +138,13 @@ const Player = (media: PlayerConfig) => {
         iv_load_policy: 3,
       },
     },
+    onProgress: state.onProgress,
+    onDuration: state.onDuration,
+    onBuffer: state.onBuffer,
+    onBufferEnd: state.onBufferEnd,
   }
 
-  const showErrorOnInvalidSources = (): void =>
-    setState({
-      ...state,
-      error: 'An error occured. Please contact support',
-    })
-
+  /* SOURCE HANDLING */
   const getValidSource = (sources: MediaSource[]): MediaSource | undefined =>
     sources
       .sort(
@@ -236,18 +162,18 @@ const Player = (media: PlayerConfig) => {
         url: firstValidSource.url,
       })
     } else {
-      showErrorOnInvalidSources()
+      state.setError('An error occurred. Please contact support')
     }
   }
   // SOURCE HANDLING
-  const initClip = (clip: MediaClip) => {
-    setState({ ...state, title: clip.title })
-    setValidSourceOrError(clip.sources, 1)
+  const initClip = ({ sources, title }: MediaClip) => {
+    state.setTitle(title)
+    setValidSourceOrError(sources, 1)
   }
 
-  const initPlaylist = (playlist: MediaPlaylist) => {
-    setState({ ...state, title: playlist.title })
-    const firstClip = playlist.clips.filter(({ order }) => order === 1)[0]
+  const initPlaylist = ({ title, clips }: MediaPlaylist) => {
+    state.setTitle(title)
+    const firstClip = clips.filter(({ order }) => order === 1)[0]
     setValidSourceOrError(firstClip.sources, firstClip.order)
   }
   // PLAYLIST FEATURES
@@ -255,7 +181,7 @@ const Player = (media: PlayerConfig) => {
     const currentClip = getCurrentPlaylistClip()
     if (currentClip) {
       const { start, end } = currentClip
-      seconds < start && seekToSeconds(start)
+      seconds < start && state.seekTo(start, 'seconds')
       seconds >= end && playlistNext()
     }
   }
@@ -291,13 +217,14 @@ const Player = (media: PlayerConfig) => {
 
   return (
     <PlayerContainer onKeyDownCapture={handleKeyboardShortcut} tabIndex={0}>
+      <div ref={fpsRef} className="fps" />
       {state.title && <h2>{state.title}</h2>}
       {media.mode === 'playlist' && (
         <PlaylistList onClick={jumpToPlaylistClip} clips={media.playlist.clips} source={source} />
       )}
 
       <PlayerUI.Body>
-        <PlayerUI.ClickCatcher onClick={togglePlay}>
+        <PlayerUI.ClickCatcher onClick={state.togglePlay}>
           <ReactPlayer
             {...playerConfig}
             url={source?.url ?? ''}
@@ -310,32 +237,14 @@ const Player = (media: PlayerConfig) => {
           />
         </PlayerUI.ClickCatcher>
         <PlayerUI.Container>
-          <SeekerBar
-            duration={state.duration}
-            current={state.current}
-            loaded={state.loaded}
-            chapters={chapters}
-            onChange={handleSeekerChange}
-            onChangeEnd={handleSeekerChangeEnd}
-            onChangeStart={handleSeekerChangeStart}
-          />
+          <SeekerBar chapters={chapters} />
           <PlayerUI.ControlPanel>
-            <Controls
-              state={state}
-              currentChapter={currentChapter}
-              onTogglePlay={togglePlay}
-              onToggleMute={toggleMute}
-              onVolumeChange={changeVolume}
-            />
-            <Settings
-              isFullscreen={false}
-              toggleSettingsMenu={() => console.log('toggleSettingsMenu')}
-              toggleFullscreen={() => console.log('toggleFullscreen')}
-            />
+            <Controls state={state} currentChapter={currentChapter} />
+            <Settings />
           </PlayerUI.ControlPanel>
         </PlayerUI.Container>
       </PlayerUI.Body>
-      <ChaptersList chapters={chapters} played={state.playedSeconds} goToChapter={seekToSeconds} />
+      <ChaptersList chapters={chapters} />
       {state.error && <PlayerUI.ErrorMessage>{state.error}</PlayerUI.ErrorMessage>}
     </PlayerContainer>
   )
