@@ -3,8 +3,8 @@ export const COLORS = {
   GREY_ALPHA: 'rgba(50, 50, 50, 0.2)',
   BLACK_ALPHA: 'rgba(0, 0, 0, 0.2)',
   WHITE: '#FFF',
-  BLUE: '#45AEFF',
-  THEME_COLOR:"#1953a8"
+  BLUE: '#2196f3',
+  THEME_COLOR:"#2196f3"
 }
 
 export const CONSTANTS = {

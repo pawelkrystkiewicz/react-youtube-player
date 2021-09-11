@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useReducer } from 'react'
 import ReactPlayer, { ReactPlayerProps } from 'react-player/lazy'
 import ChaptersList from './ChaptersList'
 import config from './config'
@@ -9,19 +9,45 @@ import SeekerBar from './SeekerBar'
 import Settings from './Settings'
 import { KeyCode } from './shortcuts'
 import {
-  CurrentSource, MediaClip, MediaPlaylist, MediaSource, PlayerConfig,
+  CurrentSource,
+  MediaClip,
+  MediaPlaylist,
+  MediaSource,
+  PlayerConfig,
   PlayerProgress,
-  PlayerState, PlaylistClip, VideoPercents
+  PlayerState,
+  PlaylistClip,
 } from './types/types'
 import { PlayerContainer } from './ui/Container'
+import produce from 'immer'
 import * as PlayerUI from './ui/PlayerUI'
 
 const { INITIAL_STATE, VOLUME_STEP, REWIND_STEP } = config
+enum ActionType {
+  'PROGRESS',
+  'PLAY',
+  'PAUSE',
+  'SEEK',
+  'NEXT',
+  'PREVIOUS',
+  'DURATION',
+}
+type Action = { type: ActionType; payload: Partial<PlayerState> }
+
+function playerReducer(state: PlayerState, action: Action): PlayerState {
+  switch (action.type) {
+    case ActionType.PLAY:
+      return { ...state, playing: true }
+
+    default:
+      return state
+  }
+}
 
 const Player = (media: PlayerConfig) => {
   const playerRef = useRef<ReactPlayer>(null)
-  const [state, setState] = useState<PlayerState>(INITIAL_STATE)
   const [source, setSource] = useState<CurrentSource | null>(null)
+  const [state, setState] = useState<PlayerState>(INITIAL_STATE)
 
   /* EVENTS of react-player */
   const onDuration = (duration: number): void => setState({ ...state, duration })
@@ -50,21 +76,22 @@ const Player = (media: PlayerConfig) => {
   /* PROGRESS BAR functions  */
   const handleSeekerChange = (sliderPosition: number): void => setState({ ...state, current: sliderPosition })
 
-  const handleSeekerChangeStart = (sliderPosition: number): void => {
-    seekInVideo(sliderPosition)
+  const handleSeekerChangeStart = (sliderPosition: number): void =>
     setState({
       ...state,
       seeking: true,
       playing: false,
       current: sliderPosition,
     })
-  }
-  const handleSeekerChangeEnd = (): void =>
+
+  const handleSeekerChangeEnd = (): void => {
+    seekToFraction(state.current)
     setState({
       ...state,
       seeking: false,
       playing: true,
     })
+  }
 
   /* BASIC CONTROLS */
   const togglePlay = (): void => setState({ ...state, playing: !state.playing })
@@ -77,17 +104,17 @@ const Player = (media: PlayerConfig) => {
     })
 
   // const setPlaybackRate = (playbackRate): void => setState({ ...state, playbackRate })
-
+  type SeekInVideoType = 'seconds' | 'fraction'
   /* POSITION */
-  const seekInVideo = (secondsOrPercent: number): void | null => {
-    playerRef.current && playerRef.current.seekTo(secondsOrPercent)
+  const seekToSeconds = (secondsOrPercent: number, type: SeekInVideoType = 'seconds') => {
+    playerRef.current && playerRef.current.seekTo(secondsOrPercent, type)
     // secondsOrPercent < 1 && handleSeekerChange(secondsOrPercent)
   }
-  const jumpForward = (): void | null => seekInVideo(state.playedSeconds + REWIND_STEP)
-  const jumpBackward = (): void | null => seekInVideo(state.playedSeconds - REWIND_STEP)
-  const jumpToStart = (): void | null => seekInVideo(0)
-  const jumpToEnd = (): void | null => seekInVideo(state.duration)
-  const jumpToPercents = (percent: VideoPercents): void | null => seekInVideo(percent / 100)
+  const jumpForward = (): void | null => seekToSeconds(state.playedSeconds + REWIND_STEP)
+  const jumpBackward = (): void | null => seekToSeconds(state.playedSeconds - REWIND_STEP)
+  const jumpToStart = (): void | null => seekToSeconds(0)
+  const jumpToEnd = (): void | null => seekToSeconds(1, 'fraction')
+  const seekToFraction = (percent: number): void | null => seekToSeconds(percent, 'fraction')
 
   /* VOLUME */
   const changeVolume = (volume: number): void => {
@@ -136,28 +163,28 @@ const Player = (media: PlayerConfig) => {
         jumpToStart()
         break
       case KeyCode.Digit2:
-        jumpToPercents(20)
+        seekToFraction(0.2)
         break
       case KeyCode.Digit3:
-        jumpToPercents(30)
+        seekToFraction(0.3)
         break
       case KeyCode.Digit4:
-        jumpToPercents(40)
+        seekToFraction(0.4)
         break
       case KeyCode.Digit5:
-        jumpToPercents(50)
+        seekToFraction(0.5)
         break
       case KeyCode.Digit6:
-        jumpToPercents(60)
+        seekToFraction(0.6)
         break
       case KeyCode.Digit7:
-        jumpToPercents(70)
+        seekToFraction(0.7)
         break
       case KeyCode.Digit8:
-        jumpToPercents(80)
+        seekToFraction(0.8)
         break
       case KeyCode.Digit9:
-        jumpToPercents(90)
+        seekToFraction(0.9)
         break
       default:
         break
@@ -177,9 +204,11 @@ const Player = (media: PlayerConfig) => {
     youtube: {
       embedOptions: {},
       playerVars: {
-        disablekb: 1,
         controls: 0,
+        showInfo: 1,
+        rel: 0,
         modestbranding: 1,
+        iv_load_policy: 3,
       },
     },
   }
@@ -226,7 +255,7 @@ const Player = (media: PlayerConfig) => {
     const currentClip = getCurrentPlaylistClip()
     if (currentClip) {
       const { start, end } = currentClip
-      seconds < start && seekInVideo(start)
+      seconds < start && seekToSeconds(start)
       seconds >= end && playlistNext()
     }
   }
@@ -306,7 +335,7 @@ const Player = (media: PlayerConfig) => {
           </PlayerUI.ControlPanel>
         </PlayerUI.Container>
       </PlayerUI.Body>
-      <ChaptersList chapters={chapters} played={state.playedSeconds} goToChapter={seekInVideo} />
+      <ChaptersList chapters={chapters} played={state.playedSeconds} goToChapter={seekToSeconds} />
       {state.error && <PlayerUI.ErrorMessage>{state.error}</PlayerUI.ErrorMessage>}
     </PlayerContainer>
   )
