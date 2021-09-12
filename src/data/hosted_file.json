@@ -4,6 +4,7 @@
     "tags": ["video", "hosted", "mp4"],
     "cover": "image url here",
     "backdrop": "",
+    "duration": "9:56",
     "sources": [
       {
         "type": "video",

@@ -1,9 +1,9 @@
-import { Marks, Chapter, MeasuredChapter } from './types/types'
+import ReactPlayer from 'react-player'
+import config from './config'
+import { Chapter, Marks, MeasuredChapter, MediaPlaylist, PlayerSource, PlaylistClip } from './types/types'
 
 export const formatDuration = (seconds: number): string => {
-  const formatted = new Date(seconds * 1000)
-    .toUTCString()
-    .match(/(\d\d:\d\d:\d\d)/)
+  const formatted = new Date(seconds * 1000).toUTCString().match(/(\d\d:\d\d:\d\d)/)
   return formatted ? formatted[0] : seconds.toString()
 }
 
@@ -26,32 +26,23 @@ export const toInt = (n: number): number => Math.trunc(n)
 
 export const createChapterMarks = (chapters: Chapter[]): Marks => {
   let marks = {}
-  chapters.forEach(
-    ({ start, title }) => (marks[start] = title.substring(0, 10) + '...')
-  )
+  chapters.forEach(({ start, title }) => (marks[start] = title.substring(0, 10) + '...'))
   return marks
 }
 
-export const toProgressPercent = (progress: number): number =>
-  Number((progress * 100).toFixed(4))
+export const toProgressPercent = (progress: number): number => Number((progress * 100).toFixed(4))
 
 export const isCurrentInChapterRange =
   (current: number) =>
   (chapter: Chapter): boolean =>
     current >= chapter.start && current < chapter.end
 
-export const getCurrentChapter = (
-  chapters: Chapter[],
-  current: number
-): Chapter => {
+export const getCurrentChapter = (chapters: Chapter[], current: number): Chapter => {
   const comparator = isCurrentInChapterRange(current)
   return chapters.filter(comparator)[0]
 }
 
-export const measureChapters = (
-  duration: number,
-  chapters?: Chapter[]
-): MeasuredChapter[] =>
+export const measureChapters = (duration: number, chapters?: Chapter[]): MeasuredChapter[] =>
   chapters
     ? chapters.map(chapter => {
         const runtime = chapter.end - chapter.start
@@ -62,3 +53,15 @@ export const measureChapters = (
         }
       })
     : []
+
+export const getValidSource = (sources: PlayerSource[]): PlayerSource | undefined =>
+  sources
+    .sort(
+      (a, b) => config.PROVIDERS_PREFERENCE.indexOf(a.providerId) - config.PROVIDERS_PREFERENCE.indexOf(b.providerId),
+    )
+    .find(({ url }) => ReactPlayer.canPlay(url))
+
+export const getPlaylistClipByOrderId = (playlist: MediaPlaylist, orderId: number): PlaylistClip =>
+  playlist.clips.filter(({ order }) => order === orderId)[0]
+
+  export const isBetween0And1 = (n: number): boolean => n >= 0 && n <= 1

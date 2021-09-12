@@ -6,7 +6,7 @@ import playlist_json from './data/playlist.json'
 import without_chapters from './data/without_chapters.json'
 import with_chapters from './data/with_chapters.json'
 import Player from './player'
-import { PlayerConfig } from './player/types/types'
+import { MediaMode, PlayerConfig } from './player/types/types'
 
 const useStyles = makeStyles({
   root: {
@@ -35,10 +35,10 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
 }
 
 export default function App() {
-  const hosted: PlayerConfig = { ...hosted_file, mode: 'clip' }
-  const withChapters: PlayerConfig = { ...with_chapters, mode: 'clip' }
-  const withoutChapters: PlayerConfig = { ...without_chapters, mode: 'clip' }
-  const playlist: PlayerConfig = { ...playlist_json, mode: 'playlist' }
+  const hosted: PlayerConfig = { ...hosted_file, mode: MediaMode.CLIP }
+  const withChapters: PlayerConfig = { ...with_chapters, mode: MediaMode.CLIP }
+  const withoutChapters: PlayerConfig = { ...without_chapters, mode: MediaMode.CLIP }
+  const playlist: PlayerConfig = { ...playlist_json, mode: MediaMode.PLAYLIST }
 
   const classes = useStyles()
   const [value, setValue] = React.useState(0)

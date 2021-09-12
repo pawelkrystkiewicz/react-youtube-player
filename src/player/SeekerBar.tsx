@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
+import { usePlayerStore } from './store/player.store'
 import { MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
 import { Bar, Chapter, ChaptersContainer, Dot } from './ui/Sliders'
@@ -14,24 +15,26 @@ interface ChaptersProgressBarProps {
 }
 
 interface SeekerBarProps {
-  loaded: number
-  current: number
-  duration: number
   chapters: MeasuredChapter[]
-  onChange: (sliderPosition: number) => void
-  onChangeStart: (sliderPosition: number) => void
-  onChangeEnd: () => void
 }
 
-const SeekerBar = ({
-  loaded,
-  current,
-  chapters,
-  duration,
-  onChange,
-  onChangeStart,
-  onChangeEnd,
-}: SeekerBarProps) => {
+const SeekerBar = ({ chapters }: SeekerBarProps) => {
+  const {
+    loaded,
+    current,
+    duration,
+    onSeekerChange,
+    onSeekerChangeStart,
+    onSeekerChangeEnd,
+  } = usePlayerStore((state) => ({
+    loaded: state.loaded,
+    current: state.current,
+    duration: state.duration,
+    onSeekerChange: state.onSeekerChange,
+    onSeekerChangeStart: state.onSeekerChangeStart,
+    onSeekerChangeEnd: state.onSeekerChangeEnd,
+  }))
+
   const [lastIntent, setLastIntent] = useState(0)
   const hasChapters = chapters.length > 0
 
@@ -51,9 +54,9 @@ const SeekerBar = ({
       onIntent={setLastIntent}
       onIntentStart={setLastIntent}
       onIntentEnd={set0}
-      onChange={onChange}
-      onChangeStart={onChangeStart}
-      onChangeEnd={onChangeEnd}
+      onChange={onSeekerChange}
+      onChangeStart={onSeekerChangeStart}
+      onChangeEnd={onSeekerChangeEnd}
     >
       {hasChapters ? (
         <ChaptersBaseBar chapters={chapters} />
