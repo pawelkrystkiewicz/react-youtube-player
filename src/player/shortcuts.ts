@@ -1,3 +1,5 @@
+import config from './config'
+
 export enum KeyCode {
   Space = 'Space', //play/pause
   ArrowUp = 'ArrowUp', // volume++
@@ -32,4 +34,71 @@ export enum KeyCode {
   Numpad7 = 'Numpad7',
   Numpad8 = 'Numpad8',
   Numpad9 = 'Numpad9',
+}
+
+/* KEYBOARD HANDLER*/
+export const handleKeyboardShortcut = state => (e: React.KeyboardEvent<HTMLDivElement>) => {
+  e.preventDefault()
+  switch (e.code) {
+    case KeyCode.Space:
+      state.togglePlay()
+      break
+    case KeyCode.ArrowUp:
+      state.volumeUp()
+      break
+    case KeyCode.ArrowDown:
+      state.volumeDown()
+      break
+    case KeyCode.ArrowLeft:
+      state.seekTo(state.playedSeconds - config.REWIND_STEP, 'seconds')
+      break
+    case KeyCode.ArrowRight:
+      state.seekTo(state.playedSeconds + config.REWIND_STEP, 'seconds')
+      break
+    case KeyCode.F:
+      console.log('toggleFullscreen')
+      break
+    case KeyCode.M:
+      state.toggleMute()
+      break
+    case KeyCode.K:
+      state.togglePlay()
+      break
+    case KeyCode.Home:
+    case KeyCode.Digit0 || KeyCode.Numpad0:
+      state.seekTo(0, 'fraction')
+      break
+    case KeyCode.End:
+      state.seekTo(1, 'fraction')
+      break
+    case KeyCode.Digit1 || KeyCode.Numpad1:
+      state.seekTo(0.1, 'fraction')
+      break
+    case KeyCode.Digit2 || KeyCode.Numpad2:
+      state.seekTo(0.2, 'fraction')
+      break
+    case KeyCode.Digit3 || KeyCode.Numpad3:
+      state.seekTo(0.3, 'fraction')
+      break
+    case KeyCode.Digit4 || KeyCode.Numpad4:
+      state.seekTo(0.4, 'fraction')
+      break
+    case KeyCode.Digit5 || KeyCode.Numpad5:
+      state.seekTo(0.5, 'fraction')
+      break
+    case KeyCode.Digit6 || KeyCode.Numpad6:
+      state.seekTo(0.6, 'fraction')
+      break
+    case KeyCode.Digit7 || KeyCode.Numpad7:
+      state.seekTo(0.7, 'fraction')
+      break
+    case KeyCode.Digit8 || KeyCode.Numpad8:
+      state.seekTo(0.8, 'fraction')
+      break
+    case KeyCode.Digit9 || KeyCode.Numpad9:
+      state.seekTo(0.9, 'fraction')
+      break
+    default:
+      break
+  }
 }

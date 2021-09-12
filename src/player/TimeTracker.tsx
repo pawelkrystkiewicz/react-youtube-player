@@ -4,14 +4,14 @@ import * as PlayerUI from './ui/PlayerUI'
 
 interface TimeTrackerProps {
   playedSeconds: number
-  duration: number
+  duration: string
 }
 
 const TimeTracker = ({ playedSeconds, duration }: TimeTrackerProps) => (
   <PlayerUI.TimeTracker>
     <FormattedTime seconds={playedSeconds} />
     &nbsp;/&nbsp;
-    <FormattedTime seconds={duration} />
+    {duration}
   </PlayerUI.TimeTracker>
 )
 

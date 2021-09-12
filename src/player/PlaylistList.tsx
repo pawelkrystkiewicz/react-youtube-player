@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import FormattedTime from './FormattedTime'
 import { CurrentSource, PlaylistClip } from './types/types'
 import * as PlaylistUI from './ui/PlaylistUI'
 
@@ -13,7 +12,7 @@ type PlaylistProps = {
 
 export const PlaylistList = ({ clips, onClick, source }: PlaylistProps) => (
   <PlaylistUI.List>
-    {clips.map(clip => (
+    {clips.map((clip) => (
       <PlaylistItem
         key={clip.order}
         clip={clip}
@@ -31,16 +30,14 @@ type PlaylistItemClip = {
 }
 
 const PlaylistItem = ({ clip, active, onClick }: PlaylistItemClip) => {
-  const { order, title, start, end, cover } = clip
-  const duration = end - start
+  const { order, title, duration, cover } = clip
   const handleItemClick = useCallback(() => onClick(order), [order, onClick])
+
   return (
     <PlaylistUI.Item onClick={handleItemClick}>
       <PlaylistUI.ItemCover active={active} src={cover || ''} alt={title} />
       <PlaylistUI.Title>{title}</PlaylistUI.Title>
-      <PlaylistUI.ItemStart>
-        <FormattedTime seconds={duration} />
-      </PlaylistUI.ItemStart>
+      <PlaylistUI.ItemStart>{duration}</PlaylistUI.ItemStart>
     </PlaylistUI.Item>
   )
 }

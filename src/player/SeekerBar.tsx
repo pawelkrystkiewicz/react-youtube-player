@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
-import { useStore } from './store/store.player'
+import { usePlayerStore } from './store/player.store'
 import { MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
 import { Bar, Chapter, ChaptersContainer, Dot } from './ui/Sliders'
@@ -19,16 +19,21 @@ interface SeekerBarProps {
 }
 
 const SeekerBar = ({ chapters }: SeekerBarProps) => {
-  const { loaded, current, duration, onSeekerChange, onSeekerChangeStart, onSeekerChangeEnd } = useStore(
-    ({ loaded, current, duration, onSeekerChange, onSeekerChangeStart, onSeekerChangeEnd }) => ({
-      loaded,
-      current,
-      duration,
-      onSeekerChange,
-      onSeekerChangeStart,
-      onSeekerChangeEnd,
-    }),
-  )
+  const {
+    loaded,
+    current,
+    duration,
+    onSeekerChange,
+    onSeekerChangeStart,
+    onSeekerChangeEnd,
+  } = usePlayerStore((state) => ({
+    loaded: state.loaded,
+    current: state.current,
+    duration: state.duration,
+    onSeekerChange: state.onSeekerChange,
+    onSeekerChangeStart: state.onSeekerChangeStart,
+    onSeekerChangeEnd: state.onSeekerChangeEnd,
+  }))
 
   const [lastIntent, setLastIntent] = useState(0)
   const hasChapters = chapters.length > 0
@@ -51,8 +56,13 @@ const SeekerBar = ({ chapters }: SeekerBarProps) => {
       onIntentEnd={set0}
       onChange={onSeekerChange}
       onChangeStart={onSeekerChangeStart}
-      onChangeEnd={onSeekerChangeEnd}>
-      {hasChapters ? <ChaptersBaseBar chapters={chapters} /> : <Bar value={1} background={GREY_ALPHA} />}
+      onChangeEnd={onSeekerChangeEnd}
+    >
+      {hasChapters ? (
+        <ChaptersBaseBar chapters={chapters} />
+      ) : (
+        <Bar value={1} background={GREY_ALPHA} />
+      )}
 
       {hasChapters ? (
         <ChaptersProgressBar
@@ -65,12 +75,22 @@ const SeekerBar = ({ chapters }: SeekerBarProps) => {
         <Bar value={lastIntent} background={GREY_ALPHA} />
       )}
       {hasChapters ? (
-        <ChaptersProgressBar chapters={chapters} duration={duration} progressPercent={loaded} background={GREY_ALPHA} />
+        <ChaptersProgressBar
+          chapters={chapters}
+          duration={duration}
+          progressPercent={loaded}
+          background={GREY_ALPHA}
+        />
       ) : (
         <Bar value={loaded} background={GREY_ALPHA} />
       )}
       {hasChapters ? (
-        <ChaptersProgressBar chapters={chapters} progressPercent={current} duration={duration} background={YT_RED} />
+        <ChaptersProgressBar
+          chapters={chapters}
+          progressPercent={current}
+          duration={duration}
+          background={YT_RED}
+        />
       ) : (
         <Bar value={current} background={YT_RED} />
       )}
@@ -87,18 +107,29 @@ const ChaptersBaseBar = ({ chapters }: { chapters: MeasuredChapter[] }) => (
   </ChaptersContainer>
 )
 
-const ChaptersProgressBar = ({ chapters, duration, progressPercent, background }: ChaptersProgressBarProps) => {
+const ChaptersProgressBar = ({
+  chapters,
+  duration,
+  progressPercent,
+  background,
+}: ChaptersProgressBarProps) => {
   const currentSeconds = duration * progressPercent
   const finishedChapters = chapters.filter(({ end }) => end < currentSeconds)
 
-  const chaptersLengthPercent = finishedChapters.reduce((acc, chapter) => acc + chapter.size, 0)
+  const chaptersLengthPercent = finishedChapters.reduce(
+    (acc, chapter) => acc + chapter.size,
+    0
+  )
 
   return (
     <ChaptersContainer>
       {finishedChapters.map(({ size }) => (
         <Chapter value={size} background={background} />
       ))}
-      <Chapter value={progressPercent - chaptersLengthPercent} background={background} />
+      <Chapter
+        value={progressPercent - chaptersLengthPercent}
+        background={background}
+      />
     </ChaptersContainer>
   )
 }

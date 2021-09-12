@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import FormattedTime from './FormattedTime'
 import { isCurrentInChapterRange } from './helper'
-import { useStore } from './store/store.player'
+import { usePlayerStore } from './store/player.store'
 import * as Chapters from './ui/ChapterList'
 
 const ChapterList = ({ chapters }) => {
@@ -15,7 +15,7 @@ const ChapterList = ({ chapters }) => {
 }
 
 const Entry = ({ chapter }) => {
-  const { playedSeconds, seekTo } = useStore(state => ({ playedSeconds: state.playedSeconds, seekTo: state.seekTo }))
+  const { playedSeconds, seekTo } = usePlayerStore(state => ({ playedSeconds: state.playedSeconds, seekTo: state.seekTo }))
   const { start, title } = chapter
 
   const goToChapterCallback = useCallback(() => seekTo(start, 'seconds'), [start, seekTo])
