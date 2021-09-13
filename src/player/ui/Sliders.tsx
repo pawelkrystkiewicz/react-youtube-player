@@ -6,7 +6,7 @@ import { StyledDIV } from '../types/styled'
 import { SliderCommonProps } from '../types/types'
 import { COLORS, CONSTANTS as C } from './colors'
 
-type DotProps = StyledDIV & SliderCommonProps
+type DotProps = StyledDIV & SliderCommonProps & { displayValue?: string }
 type BarProps = StyledDIV & SliderCommonProps
 
 export const Dot: React.FunctionComponent<DotProps> = styled.div`
@@ -19,6 +19,15 @@ export const Dot: React.FunctionComponent<DotProps> = styled.div`
   padding: 5px;
   &:hover {
     transform: scale(1.5);
+  }
+  &:hover:before {
+    font-size: 8px;
+    font-weight: 500;
+    top: -18px;
+    left: calc(50% - 12px);
+    width: min-content;
+    position: absolute;
+    content: '${({ displayValue }: DotProps) => displayValue}';
   }
 
   z-index: ${({ z }: DotProps) => (z ? z : 1)};

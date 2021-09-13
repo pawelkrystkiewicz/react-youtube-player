@@ -56,7 +56,7 @@ export const handleKeyboardShortcut = state => (e: React.KeyboardEvent<HTMLDivEl
       state.seekTo(state.playedSeconds + config.REWIND_STEP, 'seconds')
       break
     case KeyCode.F:
-      console.log('toggleFullscreen')
+      state.toggleFullscreen()
       break
     case KeyCode.M:
       state.toggleMute()

@@ -49,7 +49,11 @@ export const ControlPanel: React.FunctionComponent<StyledDIV> = styled.div`
   justify-content: space-between;
   align-items: center;
   align-content: center;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
   height: 40px;
   margin: 0 12px;
 `

@@ -4,6 +4,7 @@ import ChaptersList from './ChaptersList'
 import config from './config'
 import Controls from './Controls'
 import {
+  formattedTimeToSeconds,
   getCurrentChapter,
   getPlaylistClipByOrderId,
   getValidSource,
@@ -126,7 +127,7 @@ const Player = (media: PlayerConfig) => {
           />
         </PlayerUI.ClickCatcher>
         <PlayerUI.Container>
-          <SeekerBar chapters={chapters} />
+          <SeekerBar chapters={chapters} duration={formattedTimeToSeconds(source.duration)} />
           <PlayerUI.ControlPanel>
             <Controls
               duration={source.duration}

@@ -1,35 +1,27 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
+import { getFormattedTime } from './helper'
 import { usePlayerStore } from './store/player.store'
 import { MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
 import { Bar, Chapter, ChaptersContainer, Dot } from './ui/Sliders'
-
 const { YT_RED, BLACK_ALPHA, GREY_ALPHA } = COLORS
-
-interface ChaptersProgressBarProps {
-  chapters: MeasuredChapter[]
-  duration: number
-  progressPercent: number
-  background: string
-}
 
 interface SeekerBarProps {
   chapters: MeasuredChapter[]
+  duration: number
 }
 
-const SeekerBar = ({ chapters }: SeekerBarProps) => {
+const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
   const {
     loaded,
     current,
-    duration,
     onSeekerChange,
     onSeekerChangeStart,
     onSeekerChangeEnd,
   } = usePlayerStore((state) => ({
     loaded: state.loaded,
     current: state.current,
-    duration: state.duration,
     onSeekerChange: state.onSeekerChange,
     onSeekerChangeStart: state.onSeekerChangeStart,
     onSeekerChangeEnd: state.onSeekerChangeEnd,
@@ -39,6 +31,7 @@ const SeekerBar = ({ chapters }: SeekerBarProps) => {
   const hasChapters = chapters.length > 0
 
   const set0 = useCallback(() => setLastIntent(0), [])
+  const dotTooltip = getFormattedTime((current * duration).toFixed(4))
 
   return (
     <Slider
@@ -94,7 +87,8 @@ const SeekerBar = ({ chapters }: SeekerBarProps) => {
       ) : (
         <Bar value={current} background={YT_RED} />
       )}
-      <Dot value={current} />
+
+      <Dot value={current} displayValue={dotTooltip} />
     </Slider>
   )
 }
@@ -107,6 +101,13 @@ const ChaptersBaseBar = ({ chapters }: { chapters: MeasuredChapter[] }) => (
   </ChaptersContainer>
 )
 
+interface ChaptersProgressBarProps {
+  chapters: MeasuredChapter[]
+  duration: number
+  progressPercent: number
+  background: string
+}
+
 const ChaptersProgressBar = ({
   chapters,
   duration,
@@ -114,16 +115,17 @@ const ChaptersProgressBar = ({
   background,
 }: ChaptersProgressBarProps) => {
   const currentSeconds = duration * progressPercent
-  const finishedChapters = chapters.filter(({ end }) => end < currentSeconds)
-
-  const chaptersLengthPercent = finishedChapters.reduce(
+  const chaptersPastCurrentTimestamp = chapters.filter(
+    ({ end }) => end < currentSeconds
+  )
+  const chaptersLengthPercent = chaptersPastCurrentTimestamp.reduce(
     (acc, chapter) => acc + chapter.size,
     0
   )
 
   return (
     <ChaptersContainer>
-      {finishedChapters.map(({ size }) => (
+      {chaptersPastCurrentTimestamp.map(({ size }) => (
         <Chapter value={size} background={background} />
       ))}
       <Chapter

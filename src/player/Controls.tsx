@@ -9,6 +9,7 @@ import TimeTracker from './TimeTracker'
 import { Chapter } from './types/types'
 import * as PlayerUI from './ui/PlayerUI'
 import VolumeBar from './VolumeBar'
+import Tooltip from '@material-ui/core/Tooltip'
 
 interface ControlsProps {
   duration: string
@@ -41,19 +42,29 @@ const Controls = ({ currentChapter, duration }: ControlsProps) => {
   return (
     <>
       <PlayerUI.Controls>
-        <PlayerUI.Button onClick={togglePlay}>
-          {playing ? <PauseIcon /> : <PlayIcon />}
-        </PlayerUI.Button>
-        <PlayerUI.VolumeControls>
-          <PlayerUI.Button onClick={toggleMute}>
-            {!volume ? (
-              <VolumeMutedIcon />
-            ) : volume >= 0.5 ? (
-              <VolumeFullIcon />
-            ) : (
-              <VolumeHalfIcon />
-            )}
+        <Tooltip
+          title={playing ? 'Wstrzymaj (k)' : 'Odtwórz (k)'}
+          placement="top-start"
+        >
+          <PlayerUI.Button onClick={togglePlay}>
+            {playing ? <PauseIcon /> : <PlayIcon />}
           </PlayerUI.Button>
+        </Tooltip>
+        <PlayerUI.VolumeControls>
+          <Tooltip
+            title={!volume ? 'Wyłącz wyciszenie (m)' : 'Wycisz (m)'}
+            placement="top"
+          >
+            <PlayerUI.Button onClick={toggleMute}>
+              {!volume ? (
+                <VolumeMutedIcon />
+              ) : volume >= 0.5 ? (
+                <VolumeFullIcon />
+              ) : (
+                <VolumeHalfIcon />
+              )}
+            </PlayerUI.Button>
+          </Tooltip>
         </PlayerUI.VolumeControls>
         <PlayerUI.VolumeBarWrapper>
           <VolumeBar volume={volume} onChange={volumeChange} />
