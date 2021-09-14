@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
 import FormattedTime from './FormattedTime'
-import { getFormattedTime } from './helper'
 import { usePlayerStore } from './store/player.store'
 import { MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
@@ -11,7 +10,7 @@ import {
   ChaptersContainer,
   Dot,
   FollowingTooltip,
-  FollowingTooltipProps,
+  FollowingTooltipProps
 } from './ui/Sliders'
 const { YT_RED, BLACK_ALPHA, GREY_ALPHA } = COLORS
 
