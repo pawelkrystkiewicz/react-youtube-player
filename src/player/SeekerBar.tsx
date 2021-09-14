@@ -1,10 +1,18 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
+import FormattedTime from './FormattedTime'
 import { getFormattedTime } from './helper'
 import { usePlayerStore } from './store/player.store'
 import { MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
-import { Bar, Chapter, ChaptersContainer, Dot } from './ui/Sliders'
+import {
+  Bar,
+  Chapter,
+  ChaptersContainer,
+  Dot,
+  FollowingTooltip,
+  FollowingTooltipProps,
+} from './ui/Sliders'
 const { YT_RED, BLACK_ALPHA, GREY_ALPHA } = COLORS
 
 interface SeekerBarProps {
@@ -16,12 +24,14 @@ const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
   const {
     loaded,
     current,
+    seeking,
     onSeekerChange,
     onSeekerChangeStart,
     onSeekerChangeEnd,
   } = usePlayerStore((state) => ({
     loaded: state.loaded,
     current: state.current,
+    seeking: state.seeking,
     onSeekerChange: state.onSeekerChange,
     onSeekerChangeStart: state.onSeekerChangeStart,
     onSeekerChangeEnd: state.onSeekerChangeEnd,
@@ -31,7 +41,6 @@ const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
   const hasChapters = chapters.length > 0
 
   const set0 = useCallback(() => setLastIntent(0), [])
-  const dotTooltip = getFormattedTime((current * duration).toFixed(4))
 
   return (
     <Slider
@@ -88,10 +97,20 @@ const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
         <Bar value={current} background={YT_RED} />
       )}
 
-      <Dot value={current} displayValue={dotTooltip} />
+      <Dot value={current} />
+      {!!lastIntent && !seeking && (
+        <TimeTooltip value={lastIntent * duration} position={lastIntent} />
+      )}
+      {seeking && <TimeTooltip value={current * duration} position={current} />}
     </Slider>
   )
 }
+
+const TimeTooltip = ({ value, position }: FollowingTooltipProps) => (
+  <FollowingTooltip value={value} position={position}>
+    <FormattedTime seconds={value} />
+  </FollowingTooltip>
+)
 
 const ChaptersBaseBar = ({ chapters }: { chapters: MeasuredChapter[] }) => (
   <ChaptersContainer>

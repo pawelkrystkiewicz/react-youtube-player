@@ -85,6 +85,7 @@ export default function App() {
           <li>Add playlist features</li>
           <li>Move repo to react-youtube-player</li>
           <li>Add material-ui and swap icons</li>
+          <li>Add tooltips</li>
           <li>
             Add jumping to video % on number key press: <kbd>1</kbd> &rarr; 10% etc.
           </li>

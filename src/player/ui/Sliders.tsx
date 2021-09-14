@@ -6,7 +6,7 @@ import { StyledDIV } from '../types/styled'
 import { SliderCommonProps } from '../types/types'
 import { COLORS, CONSTANTS as C } from './colors'
 
-type DotProps = StyledDIV & SliderCommonProps & { displayValue?: string }
+type DotProps = StyledDIV & SliderCommonProps
 type BarProps = StyledDIV & SliderCommonProps
 
 export const Dot: React.FunctionComponent<DotProps> = styled.div`
@@ -19,15 +19,6 @@ export const Dot: React.FunctionComponent<DotProps> = styled.div`
   padding: 5px;
   &:hover {
     transform: scale(1.5);
-  }
-  &:hover:before {
-    font-size: 8px;
-    font-weight: 500;
-    top: -18px;
-    left: calc(50% - 12px);
-    width: min-content;
-    position: absolute;
-    content: '${({ displayValue }: DotProps) => displayValue}';
   }
 
   z-index: ${({ z }: DotProps) => (z ? z : 1)};
@@ -102,4 +93,25 @@ export const ChaptersContainer: React.FunctionComponent<StyledDIV> = styled.div`
   &:hover {
     transform: scaleY(1.5);
   }
+`
+
+export interface FollowingTooltipProps extends StyledDIV {
+  value: number
+  position: number
+}
+
+export const FollowingTooltip: React.FunctionComponent<FollowingTooltipProps> = styled.div`
+  display: inline-block;
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-50%);
+  padding: 8;
+  border-radius: 3;
+  color: #fff;
+  font-size: 12;
+  font-weight: 'bold';
+  text-align: 'center';
+  line-height: 3;
+  left: ${({ position }: FollowingTooltipProps) =>
+    toProgressPercent(position)}%;
 `
