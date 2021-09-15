@@ -66,7 +66,5 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       playerRef.current.seekTo(secondsOrPercent, type)
     }
   },
-  setPlaybackRate: (playbackRate: number): void => {
-    isBetween0And1(playbackRate) && set({ playbackRate })
-  },
+  setPlaybackRate: (playbackRate: number): void => set({ playbackRate }),
 }))
