@@ -31,6 +31,7 @@ const config: Config = {
     muted: false,
     loop: false,
     fullscreen: false,
+    settings: false,
   },
   STATIC_PLAYER_CONFIG: {
     style: { pointerEvents: 'none' },

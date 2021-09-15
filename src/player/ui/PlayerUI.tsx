@@ -112,7 +112,9 @@ export const TimeTracker: React.FunctionComponent<PlayerButtonProps> = styled.di
   padding: 0 2px;
 `
 
-export const ClickCatcher: React.FunctionComponent<StyledDIV> = styled.div``
+export const ClickCatcher: React.FunctionComponent<
+  StyledDIV & { onMouseLeave?: () => void }
+> = styled.div``
 
 export const ErrorMessage: React.FunctionComponent<StyledDIV> = styled.div`
   color: rgba(218, 22, 22, 0.527);
@@ -120,4 +122,53 @@ export const ErrorMessage: React.FunctionComponent<StyledDIV> = styled.div`
   padding: 20px;
   border: 1px solid rgba(218, 22, 22, 1);
   margin-top: 10px;
+`
+export const SettingsBox: React.FunctionComponent<StyledDIV> = styled.div`
+  max-width: 500px;
+  min-width: 150px;
+  min-height: 50px;
+
+  padding: 10px;
+
+  position: absolute;
+  bottom: 55px;
+  right: 55px;
+
+  background-color: #1c1c1bd5;
+  font-size: 13px;
+`
+
+export const SettingsRow: React.FunctionComponent<StyledDIV> = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  column-gap: 20px;
+  line-height: 2;
+`
+export const SettingsName: React.FunctionComponent<StyledDIV> = styled.div`
+  font-weight: 500;
+`
+export const SettingsOption: React.FunctionComponent<StyledDIV> = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+`
+
+export const SettingsValuesGrid: React.FunctionComponent<StyledDIV> = styled.div`
+  display: grid;
+  grid-template-columns: 30px auto;
+  grid-template-rows: 25px;
+  grid-template-areas: 'icon value';
+`
+export const SettingsValue: React.FunctionComponent<StyledDIV> = styled.div`
+  grid-area: value;
+  cursor: pointer;
+`
+export const SettingsIcon: React.FunctionComponent<StyledDIV> = styled.div`
+  grid-area: icon;
 `

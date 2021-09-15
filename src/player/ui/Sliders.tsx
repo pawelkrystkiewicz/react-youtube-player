@@ -1,15 +1,24 @@
 import React from 'react'
 import { Direction } from 'react-player-controls'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { toProgressPercent } from '../helper'
 import { StyledDIV } from '../types/styled'
 import { SliderCommonProps } from '../types/types'
-import { COLORS, CONSTANTS as C } from './colors'
+import { COLORS, CONSTANTS as C, } from './colors'
 
-type DotProps = StyledDIV & SliderCommonProps
+type DotProps = StyledDIV & SliderCommonProps & { visible: boolean }
 type BarProps = StyledDIV & SliderCommonProps
 
+const pulse = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`
 export const Dot: React.FunctionComponent<DotProps> = styled.div`
+  opacity: ${({ visible }: DotProps) => (visible ? 1 : 0)};
   position: absolute;
   width: 12px;
   height: 12px;
@@ -17,9 +26,6 @@ export const Dot: React.FunctionComponent<DotProps> = styled.div`
   transform: scale(1);
   transition: transform 0.2s;
   padding: 5px;
-  &:hover {
-    transform: scale(1.5);
-  }
 
   z-index: ${({ z }: DotProps) => (z ? z : 1)};
   background-color: ${({ background }: DotProps) =>
@@ -36,6 +42,8 @@ export const Dot: React.FunctionComponent<DotProps> = styled.div`
         bottom: ${toProgressPercent(value)}%;
         margin-bottom: -8px;
         margin-left: -4px;`}
+
+  animation: ${pulse} 1s ease-in-out;
 `
 
 export const Bar: React.FunctionComponent<BarProps> = styled.div`
@@ -101,7 +109,13 @@ export interface FollowingTooltipProps extends StyledDIV {
 }
 
 export const FollowingTooltip: React.FunctionComponent<FollowingTooltipProps> = styled.div`
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+
   position: absolute;
   bottom: 100%;
   transform: translateX(-50%);
@@ -111,7 +125,14 @@ export const FollowingTooltip: React.FunctionComponent<FollowingTooltipProps> = 
   font-size: 12;
   font-weight: 'bold';
   text-align: 'center';
-  line-height: 3;
+  margin-bottom: 10px;
   left: ${({ position }: FollowingTooltipProps) =>
     toProgressPercent(position)}%;
+`
+
+export const TooltipChapter: React.FunctionComponent<StyledDIV> = styled.div`
+  max-width: ${C.CHAPTERS_TOOLTIP_WIDTH}px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `

@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { Direction, Slider } from 'react-player-controls'
 import FormattedTime from './FormattedTime'
+import { getCurrentChapter } from './helper'
 import { usePlayerStore } from './store/player.store'
-import { MeasuredChapter } from './types/types'
+import { Chapter as ChapterType, MeasuredChapter } from './types/types'
 import { COLORS } from './ui/colors'
 import {
   Bar,
@@ -10,7 +11,8 @@ import {
   ChaptersContainer,
   Dot,
   FollowingTooltip,
-  FollowingTooltipProps
+  FollowingTooltipProps,
+  TooltipChapter
 } from './ui/Sliders'
 const { YT_RED, BLACK_ALPHA, GREY_ALPHA } = COLORS
 
@@ -36,10 +38,13 @@ const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
     onSeekerChangeEnd: state.onSeekerChangeEnd,
   }))
 
-  const [lastIntent, setLastIntent] = useState(0)
+  const [lastIntent, setLastIntent] = useState<number>(0)
   const hasChapters = chapters.length > 0
-
   const set0 = useCallback(() => setLastIntent(0), [])
+  const intentTooltipValue = lastIntent * duration
+  const dotTooltipValue = current * duration
+  const intentTooltipChapter = getCurrentChapter(chapters, intentTooltipValue)
+  const dotTooltipChapter = getCurrentChapter(chapters, dotTooltipValue)
 
   return (
     <Slider
@@ -95,19 +100,33 @@ const SeekerBar = ({ chapters, duration }: SeekerBarProps) => {
       ) : (
         <Bar value={current} background={YT_RED} />
       )}
-
-      <Dot value={current} />
+      <Dot value={current} visible={!!lastIntent || seeking} />
       {!!lastIntent && !seeking && (
-        <TimeTooltip value={lastIntent * duration} position={lastIntent} />
+        <TimeTooltip
+          value={intentTooltipValue}
+          position={lastIntent}
+          chapter={intentTooltipChapter}
+        />
       )}
-      {seeking && <TimeTooltip value={current * duration} position={current} />}
+      {seeking && (
+        <TimeTooltip
+          value={dotTooltipValue}
+          position={current}
+          chapter={dotTooltipChapter}
+        />
+      )}
     </Slider>
   )
 }
 
-const TimeTooltip = ({ value, position }: FollowingTooltipProps) => (
-  <FollowingTooltip value={value} position={position}>
-    <FormattedTime seconds={value} />
+interface TimeTooltipProps extends FollowingTooltipProps {
+  chapter: ChapterType
+}
+
+const TimeTooltip = (props: TimeTooltipProps) => (
+  <FollowingTooltip {...props}>
+    {props.chapter && <TooltipChapter>{props.chapter.title}</TooltipChapter>}
+    <FormattedTime seconds={props.value} />
   </FollowingTooltip>
 )
 
@@ -124,6 +143,8 @@ interface ChaptersProgressBarProps {
   duration: number
   progressPercent: number
   background: string
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 const ChaptersProgressBar = ({
@@ -131,6 +152,7 @@ const ChaptersProgressBar = ({
   duration,
   progressPercent,
   background,
+  ...props
 }: ChaptersProgressBarProps) => {
   const currentSeconds = duration * progressPercent
   const chaptersPastCurrentTimestamp = chapters.filter(
@@ -142,7 +164,7 @@ const ChaptersProgressBar = ({
   )
 
   return (
-    <ChaptersContainer>
+    <ChaptersContainer {...props}>
       {chaptersPastCurrentTimestamp.map(({ size }) => (
         <Chapter value={size} background={background} />
       ))}

@@ -40,6 +40,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     set({ ...update })
   },
   toggleFullscreen: () => set({ fullscreen: !get().fullscreen }),
+  toggleSettings: () => set({ settings: !get().settings }),
+  hideSettings: () => set({ settings: false }),
   volumeChange: (volume: number) =>
     isBetween0And1(volume) && set(() => ({ volume, prevVolume: volume })),
   volumeUp: () => {

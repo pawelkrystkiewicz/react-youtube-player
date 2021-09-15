@@ -7,6 +7,7 @@ import without_chapters from './data/without_chapters.json'
 import with_chapters from './data/with_chapters.json'
 import Player from './player'
 import { MediaMode, PlayerConfig } from './player/types/types'
+import SettingsModal from './player/SettingsModal'
 
 const useStyles = makeStyles({
   root: {
@@ -28,7 +29,8 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
-      {...other}>
+      {...other}
+    >
       {value === index && <Container maxWidth="sm">{children}</Container>}
     </div>
   )
@@ -37,7 +39,10 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
 export default function App() {
   const hosted: PlayerConfig = { ...hosted_file, mode: MediaMode.CLIP }
   const withChapters: PlayerConfig = { ...with_chapters, mode: MediaMode.CLIP }
-  const withoutChapters: PlayerConfig = { ...without_chapters, mode: MediaMode.CLIP }
+  const withoutChapters: PlayerConfig = {
+    ...without_chapters,
+    mode: MediaMode.CLIP,
+  }
   const playlist: PlayerConfig = { ...playlist_json, mode: MediaMode.PLAYLIST }
 
   const classes = useStyles()
@@ -53,12 +58,19 @@ export default function App() {
         <div className="radar">
           <LagRadar size={300} frames={120} />
         </div>
-        <Tabs indicatorColor="primary" textColor="primary" centered value={value} onChange={handleChange}>
+        <Tabs
+          indicatorColor="primary"
+          textColor="primary"
+          centered
+          value={value}
+          onChange={handleChange}
+        >
           <Tab label="With chapters" />
           <Tab label="Without chapters" />
           <Tab label="Hosted file" />
           <Tab label="Playlist" />
           <Tab label="Change Log" />
+          <Tab label="SettingsModal" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -87,9 +99,13 @@ export default function App() {
           <li>Add material-ui and swap icons</li>
           <li>Add tooltips</li>
           <li>
-            Add jumping to video % on number key press: <kbd>1</kbd> &rarr; 10% etc.
+            Add jumping to video % on number key press: <kbd>1</kbd> &rarr; 10%
+            etc.
           </li>
         </ol>
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        <SettingsModal />
       </TabPanel>
     </div>
   )

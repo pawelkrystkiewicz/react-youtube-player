@@ -69,7 +69,6 @@ const Controls = ({ currentChapter, duration }: ControlsProps) => {
         <PlayerUI.VolumeBarWrapper>
           <VolumeBar volume={volume} onChange={volumeChange} />
         </PlayerUI.VolumeBarWrapper>
-
         <TimeTracker playedSeconds={playedSeconds} duration={duration} />
       </PlayerUI.Controls>
       <PlayerUI.Chapters>

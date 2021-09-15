@@ -16,7 +16,7 @@ const VolumeBar = ({ volume, onChange }: VolumeBarProps) => (
   >
     <StyledSlider.Bar value={1} background={COLORS.GREY_ALPHA} />
     <StyledSlider.Bar value={volume} background={COLORS.WHITE} />
-    <StyledSlider.Dot value={volume} background={COLORS.WHITE} />
+    <StyledSlider.Dot value={volume} background={COLORS.WHITE} visible={true} />
   </Slider>
 )
 

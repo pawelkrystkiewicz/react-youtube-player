@@ -25,6 +25,7 @@ export type PlayerState = PlayerProgress & {
   url?: string
   error?: string
   fullscreen: boolean
+  settings: boolean
   ref?: React.RefObject<ReactPlayer> | null
 }
 

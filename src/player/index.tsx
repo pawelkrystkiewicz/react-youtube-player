@@ -18,6 +18,7 @@ import { usePlayerStore } from './store/player.store'
 import { CurrentSource, MediaMode, PlayerConfig } from './types/types'
 import { PlayerContainer } from './ui/Container'
 import * as PlayerUI from './ui/PlayerUI'
+import SettingsModal from './SettingsModal'
 
 const Player = (media: PlayerConfig) => {
   const playerRef = useRef<ReactPlayer>(null)
@@ -113,7 +114,7 @@ const Player = (media: PlayerConfig) => {
       <div ref={fpsRef} className="fps" />
       <h2>{state.title}</h2>
 
-      <PlayerUI.Body>
+      <PlayerUI.Body onMouseLeave={state.hideSettings}>
         <PlayerUI.ClickCatcher onClick={state.togglePlay}>
           <ReactPlayer
             {...playerConfig}
@@ -127,7 +128,11 @@ const Player = (media: PlayerConfig) => {
           />
         </PlayerUI.ClickCatcher>
         <PlayerUI.Container>
-          <SeekerBar chapters={chapters} duration={formattedTimeToSeconds(source.duration)} />
+          {state.settings && <SettingsModal />}
+          <SeekerBar
+            chapters={chapters}
+            duration={formattedTimeToSeconds(source.duration)}
+          />
           <PlayerUI.ControlPanel>
             <Controls
               duration={source.duration}

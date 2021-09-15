@@ -1,27 +1,31 @@
-import React, { useState } from 'react'
+import Tooltip from '@material-ui/core/Tooltip'
 import FullScreenIcon from '@material-ui/icons/Fullscreen'
 import FullScreenExitIcon from '@material-ui/icons/FullscreenExit'
 import SettingsIcon from '@material-ui/icons/Settings'
-import * as PlayerUI from './ui/PlayerUI'
+import React from 'react'
 import { usePlayerStore } from './store/player.store'
-import Tooltip from '@material-ui/core/Tooltip'
+import * as PlayerUI from './ui/PlayerUI'
 
 const Settings = () => {
-  const { fullscreen, toggleFullscreen } = usePlayerStore((state) => ({
+  const {
+    fullscreen,
+    toggleFullscreen,
+    toggleSettings,
+    settings,
+  } = usePlayerStore((state) => ({
     fullscreen: state.fullscreen,
+    settings: state.settings,
     toggleFullscreen: state.toggleFullscreen,
+    toggleSettings: state.toggleSettings,
   }))
-
-  const [settingsOpen, setSettingsMenu] = useState<boolean>(false)
-  const toggleSettingsMenu = () => setSettingsMenu(!settingsOpen)
 
   return (
     <PlayerUI.Settings>
       <Tooltip title="Ustawienia" placement="top">
-        <PlayerUI.Button onClick={toggleSettingsMenu}>
+        <PlayerUI.Button onClick={toggleSettings}>
           <SettingsIcon
             style={{
-              transform: settingsOpen ? 'rotate(-90deg)' : 'rotate(0deg)',
+              transform: settings ? 'rotate(-90deg)' : 'rotate(0deg)',
             }}
           />
         </PlayerUI.Button>
