@@ -1,4 +1,5 @@
-import { AppBar, Container, makeStyles, Tab, Tabs } from '@material-ui/core'
+import { AppBar, Container, Tab, Tabs } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React from 'react'
 import LagRadar from 'react-lag-radar'
 import hosted_file from './data/hosted_file.json'

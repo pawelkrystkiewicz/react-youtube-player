@@ -1,15 +1,15 @@
-import PauseIcon from '@material-ui/icons/Pause'
-import PlayIcon from '@material-ui/icons/PlayArrow'
-import VolumeHalfIcon from '@material-ui/icons/VolumeDown'
-import VolumeMutedIcon from '@material-ui/icons/VolumeOff'
-import VolumeFullIcon from '@material-ui/icons/VolumeUp'
+import PauseIcon from '@mui/icons-material/Pause'
+import PlayIcon from '@mui/icons-material/PlayArrow'
+import VolumeHalfIcon from '@mui/icons-material/VolumeDown'
+import VolumeMutedIcon from '@mui/icons-material/VolumeOff'
+import VolumeFullIcon from '@mui/icons-material/VolumeUp'
 import React from 'react'
 import { usePlayerStore } from './store/player.store'
 import TimeTracker from './TimeTracker'
 import { Chapter } from './types/types'
 import * as PlayerUI from './ui/PlayerUI'
 import VolumeBar from './VolumeBar'
-import Tooltip from '@material-ui/core/Tooltip'
+import Tooltip from '@mui/material/Tooltip'
 
 interface ControlsProps {
   duration: string

@@ -31,7 +31,7 @@ export const Title: React.FunctionComponent<StyledDIV> = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
 `
-export const ItemStart: React.FunctionComponent<StyledDIV> = styled.div`
+export const ItemStart: React.FC<StyledDIV> = styled.div`
   border-radius: 3px;
   background-color: rgba(0, 0, 0, 0.4);
   padding: 2px 4px;

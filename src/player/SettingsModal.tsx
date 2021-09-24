@@ -1,6 +1,6 @@
-import Left from '@material-ui/icons/ArrowBackIos'
-import Right from '@material-ui/icons/ArrowForwardIos'
-import CheckIcon from '@material-ui/icons/Check'
+import Left from '@mui/icons-material/ArrowBackIos'
+import Right from '@mui/icons-material/ArrowForwardIos'
+import CheckIcon from '@mui/icons-material/Check'
 import React from 'react'
 import { usePlayerStore } from './store/player.store'
 import {
